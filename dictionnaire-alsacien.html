@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wörterbuch — Dictionnaire alsacien-français en ligne</title>
+  <meta name="description" content="Traduisez de l'alsacien au français et du français à l'alsacien. Dictionnaire collaboratif, navigation alphabétique, usage libre. Sans compte, sans trackers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #FAF7F2;
+      --color-surface: #F2EDE6;
+      --color-surface-hover: #EAE3D8;
+      --color-border: #D9CFC5;
+      --color-text: #1C1410;
+      --color-muted: #6B5E52;
+      --color-primary: #B22222;
+      --color-primary-dark: #8B0000;
+      --color-accent: #C8943A;
+      --font-title: 'Playfair Display', Georgia, serif;
+      --font-body: 'Libre Baskerville', 'Book Antiqua', Palatino, serif;
+      --font-example: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
+      --max-width: 860px;
+      --max-width-nav: 1100px;
+      --radius: 4px;
+      --transition-fast: 150ms ease-out;
+      --transition-mid: 250ms ease-in-out;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .site-header__inner {
+      max-width: var(--max-width-nav);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .site-header__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .site-header__wordmark {
+      font-family: var(--font-title);
+      font-size: 1.375rem;
+      font-weight: 900;
+      color: var(--color-text);
+      letter-spacing: -0.01em;
+    }
+
+    .site-header__sub {
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 6rem 1.5rem 4rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .hero__overtitle {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--color-primary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero__title {
+      font-family: var(--font-title);
+      font-size: clamp(2.5rem, 7vw, 3.5rem);
+      font-weight: 900;
+      color: var(--color-text);
+      line-height: 1.05;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero__title span {
+      color: var(--color-primary);
+    }
+
+    .hero__sub {
+      font-size: 1.125rem;
+      color: var(--color-muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .hero__body {
+      font-size: 1rem;
+      color: var(--color-text);
+      max-width: 600px;
+      line-height: 1.75;
+    }
+
+    .hero__cta {
+      display: inline-block;
+      margin-top: 1.75rem;
+      height: 44px;
+      line-height: 44px;
+      padding: 0 1.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 400;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .hero__cta:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text);
+    }
+
+    /* ── SWITCH ── */
+    .switch-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.75rem 1.5rem;
+    }
+
+    .switch-wrap__inner {
+      max-width: var(--max-width-nav);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .switch__btn {
+      height: 44px;
+      padding: 0 1.5rem;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 400;
+      cursor: pointer;
+      border: 1px solid var(--color-border);
+      background: transparent;
+      color: var(--color-muted);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .switch__btn--active {
+      background: var(--color-primary);
+      color: var(--color-bg);
+      font-weight: 700;
+      border-color: var(--color-primary);
+    }
+
+    .switch__btn:hover:not(.switch__btn--active) {
+      border-color: var(--color-primary);
+      color: var(--color-text);
+    }
+
+    .switch__sep {
+      color: var(--color-accent);
+      font-size: 1.125rem;
+      flex-shrink: 0;
+      transition: transform var(--transition-mid);
+      cursor: default;
+      user-select: none;
+      display: inline-block;
+    }
+
+    .switch__sep--flipped {
+      transform: rotateY(180deg);
+    }
+
+    .switch__search-wrap {
+      flex: 1;
+      min-width: 180px;
+      max-width: 320px;
+      position: relative;
+    }
+
+    .switch__search {
+      width: 100%;
+      height: 44px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .switch__search:focus {
+      border-color: var(--color-primary);
+    }
+
+    .switch__search::placeholder {
+      color: var(--color-muted);
+      font-style: italic;
+    }
+
+    /* ── NAV ALPHABET ── */
+    .nav-alpha {
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: var(--max-width-nav);
+      margin: 0 auto;
+    }
+
+    .nav-alpha__grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+
+    .nav-alpha__btn {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-alpha__btn:hover:not(.nav-alpha__btn--disabled):not(.nav-alpha__btn--active) {
+      background: var(--color-primary);
+      color: var(--color-bg);
+      border-color: var(--color-primary);
+    }
+
+    .nav-alpha__btn--active {
+      background: var(--color-primary);
+      color: var(--color-bg);
+      border: 2px solid var(--color-primary-dark);
+    }
+
+    .nav-alpha__btn--disabled {
+      color: var(--color-border);
+      border-color: #EAE3D8;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 767px) {
+      .nav-alpha__grid {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+      }
+      .nav-alpha__btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    /* ── RÉSULTATS ── */
+    .resultats {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .resultats__vide {
+      text-align: center;
+      padding: 5rem 1.5rem;
+      color: var(--color-muted);
+      font-size: 1.0625rem;
+      font-style: italic;
+    }
+
+    /* ── SECTION LETTRE ── */
+    .section-lettre {
+      margin-bottom: 4rem;
+    }
+
+    .section-lettre__header {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-lettre__hero {
+      font-family: var(--font-title);
+      font-size: 6rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .section-lettre__meta {
+      padding-bottom: 1rem;
+    }
+
+    .section-lettre__titre {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .section-lettre__count {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+    }
+
+    .section-lettre__separator {
+      width: 100%;
+      height: 2px;
+      background: var(--color-primary);
+      margin-bottom: 0;
+    }
+
+    /* ── ENTRÉE ── */
+    .entree {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 1.5rem;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1.25rem 1.5rem;
+      transition: background var(--transition-fast);
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .entree--visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 200ms ease-out, transform 200ms ease-out, background var(--transition-fast);
+    }
+
+    .entree--instant {
+      opacity: 1;
+      transform: none;
+      transition: background var(--transition-fast);
+    }
+
+    .entree:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .entree__separator {
+      width: 1px;
+      background: var(--color-border);
+      align-self: stretch;
+    }
+
+    .entree__als {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.4;
+      margin-bottom: 0.25rem;
+    }
+
+    .entree__fr {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--color-text);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .entree__ex {
+      font-family: var(--font-example);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--color-muted);
+      line-height: 1.5;
+    }
+
+    .entree__col-als { }
+    .entree__col-fr { }
+
+    @media (max-width: 599px) {
+      .entree {
+        grid-template-columns: 1fr;
+        gap: 0.75rem 0;
+      }
+
+      .entree__separator {
+        display: none;
+      }
+
+      .entree__als {
+        font-size: 1.125rem;
+      }
+    }
+
+    /* ── PARTENAIRES ── */
+    .partenaires {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .partenaires__header {
+      margin-bottom: 1.5rem;
+    }
+
+    .partenaires__titre {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.375rem;
+    }
+
+    .partenaires__sub {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    .partenaires__liste {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .partenaire__encart {
+      flex: 1;
+      min-width: 260px;
+      max-width: 380px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      transition: background var(--transition-fast);
+    }
+
+    .partenaire__encart:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .partenaire__logo {
+      width: 48px;
+      height: 48px;
+      background: var(--color-border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--color-muted);
+    }
+
+    .partenaire__info {}
+
+    .partenaire__nom {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      margin-bottom: 0.125rem;
+    }
+
+    .partenaire__lieu {
+      font-size: 0.8125rem;
+      color: var(--color-muted);
+    }
+
+    .partenaire__badge {
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      letter-spacing: 0.04em;
+    }
+
+    .partenaire__cta {
+      margin-left: auto;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    /* ── DONS ── */
+    .dons-bandeau {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      overflow: hidden;
+      transition: max-height var(--transition-mid);
+    }
+
+    .dons-bandeau--collapsed .dons-bandeau__full {
+      display: none;
+    }
+
+    .dons-bandeau__toggle {
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-align: left;
+      transition: background var(--transition-fast);
+    }
+
+    .dons-bandeau__toggle:hover {
+      background: var(--color-surface-hover);
+    }
+
+    .dons-bandeau__toggle-inner {
+      max-width: var(--max-width-nav);
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dons-bandeau__icon {
+      flex-shrink: 0;
+      color: var(--color-accent);
+    }
+
+    .dons-bandeau__headline-sm {
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--color-text);
+      flex: 1;
+    }
+
+    .dons-bandeau__chevron {
+      color: var(--color-muted);
+      transition: transform var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .dons-bandeau__chevron--open {
+      transform: rotate(180deg);
+    }
+
+    .dons-bandeau__full {
+      padding: 0 1.5rem 2.5rem;
+    }
+
+    .dons-bandeau__full-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .dons-bandeau__titre {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .dons-bandeau__sub {
+      font-size: 1rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+
+    .dons-bandeau__body {
+      font-size: 1rem;
+      color: var(--color-text);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+    }
+
+    .dons-bandeau__cta {
+      display: inline-block;
+      height: 48px;
+      line-height: 48px;
+      padding: 0 2rem;
+      background: var(--color-accent);
+      color: var(--color-bg);
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: background var(--transition-fast);
+    }
+
+    .dons-bandeau__cta:hover {
+      background: #b07c2a;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--color-text);
+      color: rgba(250, 247, 242, 0.55);
+      padding: 3rem 1.5rem;
+    }
+
+    .site-footer__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .site-footer__mentions {
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+
+    .site-footer__credits {
+      font-size: 0.8125rem;
+      font-style: italic;
+      margin-top: 0.75rem;
+    }
+
+    .site-footer__nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: right;
+    }
+
+    .site-footer__nav a {
+      font-size: 0.875rem;
+      color: rgba(250, 247, 242, 0.55);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .site-footer__nav a:hover {
+      color: var(--color-bg);
+    }
+
+    @media (max-width: 599px) {
+      .site-footer__inner {
+        grid-template-columns: 1fr;
+      }
+      .site-footer__nav {
+        text-align: left;
+      }
+    }
+
+    /* ── RÉSULTATS RECHERCHE ── */
+    .search-resultats {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .search-resultats__titre {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .search-resultats__count {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .search-resultats__aucun {
+      font-size: 1rem;
+      color: var(--color-muted);
+      font-style: italic;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .search-resultats__cta {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+    }
+
+    .hidden { display: none !important; }
+
+    /* ── RESPONSIVE SWITCH ── */
+    @media (max-width: 600px) {
+      .switch-wrap__inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .switch__search-wrap {
+        max-width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      .entree { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a href="#" class="site-header__brand" aria-label="Accueil — Wörterbuch">
+        <div>
+          <div class="site-header__wordmark">Wörterbuch</div>
+          <div class="site-header__sub">Dictionnaire alsacien-français</div>
+        </div>
+      </a>
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M20 8 C20 8 18 10 18 13 C18 15 19 16 19 17 L19 22" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 22 C19 22 14 24 12 27 C10 30 11 32 13 32" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 22 C19 22 22 25 22 28 L22 33" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M22 33 L19 33 M22 33 L25 33" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M13 32 L10 32 M13 32 L16 32" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 17 C19 17 24 15 27 14 C29 13 30 12 30 12" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M30 12 L33 11 M30 12 L31 15" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="20" cy="7" r="1.5" fill="#B22222"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-titre">
+    <p class="hero__overtitle">Alsacien · Français</p>
+    <h1 class="hero__title" id="hero-titre">Wörterbuch<span>.</span></h1>
+    <p class="hero__sub">Le dictionnaire alsacien-français qui ne prend pas les gens pour des touristes.</p>
+    <p class="hero__body">Deux sens. Une langue qui résiste. Quelques milliers de mots pour comprendre ce que votre voisin de Strasbourg marmonne dans sa barbe — ou pour retrouver le mot exact que votre grand-mère utilisait pour parler du brouillard sur le Rhin.</p>
+    <a href="#switch" class="hero__cta" aria-label="Aller à la recherche">Chercher un mot</a>
+  </section>
+
+  <!-- SWITCH + SEARCH -->
+  <div class="switch-wrap" id="switch" role="search">
+    <div class="switch-wrap__inner">
+      <button class="switch__btn switch__btn--active" id="btnAls" aria-pressed="true" type="button">
+        Je cherche un mot alsacien
+      </button>
+      <span class="switch__sep" id="switchSep" aria-hidden="true">⇄</span>
+      <button class="switch__btn" id="btnFr" aria-pressed="false" type="button">
+        Je cherche un mot français
+      </button>
+      <div class="switch__search-wrap">
+        <input
+          type="search"
+          class="switch__search"
+          id="champRecherche"
+          placeholder="Ex : Schtubb, Grumbeere, Hopfele…"
+          autocomplete="off"
+          aria-label="Rechercher un mot"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV ALPHABÉTIQUE -->
+  <nav class="nav-alpha" aria-label="Navigation alphabétique">
+    <div class="nav-alpha__grid" id="navAlpha" role="list"></div>
+  </nav>
+
+  <!-- RÉSULTATS ALPHABÉTIQUES -->
+  <main class="resultats" id="resultatsAlpha" role="main">
+    <p class="resultats__vide" id="messageVide" aria-live="polite">
+      Tapez un mot pour commencer. Alsacien ou français — le dictionnaire fonctionne dans les deux sens.
+    </p>
+  </main>
+
+  <!-- RÉSULTATS RECHERCHE -->
+  <section class="search-resultats hidden" id="resultatsRecherche" aria-live="polite" aria-label="Résultats de recherche">
+  </section>
+
+  <!-- PARTENAIRES -->
+  <aside class="partenaires" aria-labelledby="partenaires-titre">
+    <div class="partenaires__header">
+      <h2 class="partenaires__titre" id="partenaires-titre">Ils font l'Alsace à leur façon.</h2>
+      <p class="partenaires__sub">Ces espaces sont réservés à des artisans et producteurs de la région. Pas de régie automatique, pas de bannières génériques — des produits qu'on a choisi de mettre en avant parce qu'ils méritent d'être connus.</p>
+    </div>
+    <div class="partenaires__liste">
+      <a href="#" class="partenaire__encart" aria-label="Brasserie du Moulin — Obernai, partenaire éditorial">
+        <div class="partenaire__logo" aria-hidden="true">B</div>
+        <div class="partenaire__info">
+          <div class="partenaire__nom">Brasserie du Moulin</div>
+          <div class="partenaire__lieu">Obernai · Partenaire éditorial</div>
+          <div class="partenaire__badge">Bières artisanales d'Alsace</div>
+        </div>
+        <span class="partenaire__cta" aria-hidden="true">Découvrir</span>
+      </a>
+      <a href="#" class="partenaire__encart" aria-label="Domaine Kieffer — Ribeauvillé, partenaire éditorial">
+        <div class="partenaire__logo" aria-hidden="true">K</div>
+        <div class="partenaire__info">
+          <div class="partenaire__nom">Domaine Kieffer</div>
+          <div class="partenaire__lieu">Ribeauvillé · Partenaire éditorial</div>
+          <div class="partenaire__badge">Vins du Haut-Rhin depuis 1874</div>
+        </div>
+        <span class="partenaire__cta" aria-hidden="true">Découvrir</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- DONS -->
+  <section class="dons-bandeau dons-bandeau--collapsed" id="donsBandeau" aria-labelledby="dons-titre">
+    <button class="dons-bandeau__toggle" id="donsToggle" type="button" aria-expanded="false" aria-controls="donsContenu">
+      <div class="dons-bandeau__toggle-inner">
+        <svg class="dons-bandeau__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2C9.5 2 7 4 7 7C7 9 8.5 10.5 8.5 10.5L12 14L15.5 10.5C15.5 10.5 17 9 17 7C17 4 14.5 2 12 2Z" stroke="#C8943A" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M8.5 10.5L5 14C4 15 4 17 5 18L12 22L19 18C20 17 20 15 19 14L15.5 10.5" stroke="#C8943A" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <span class="dons-bandeau__headline-sm">Ce dictionnaire existe grâce à des gens comme vous.</span>
+        <svg class="dons-bandeau__chevron" id="donsChevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M5 7.5L10 12.5L15 7.5" stroke="#6B5E52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </button>
+
+    <div class="dons-bandeau__full" id="donsContenu" hidden>
+      <div class="dons-bandeau__full-inner">
+        <h2 class="dons-bandeau__titre" id="dons-titre">Ce dictionnaire existe grâce à des gens comme vous.</h2>
+        <p class="dons-bandeau__sub">Pas de publicité intrusive. Pas d'abonnement. Pas de mur de cookies à traverser au machette. Juste un dictionnaire qui fonctionne — et qui a besoin d'électricité.</p>
+        <p class="dons-bandeau__body">Si ce site vous a été utile une fois, c'est déjà bien. Si vous revenez régulièrement, un don de quelques euros permet de maintenir la base, d'ajouter des entrées et de garder les lumières allumées.<br><br>Virer de l'argent à un dictionnaire alsacien est peut-être l'acte culturel le plus radical de votre semaine.</p>
+        <a href="#" class="dons-bandeau__cta">Soutenir le dictionnaire</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+      <div>
+        <p class="site-footer__mentions">
+          Dictionnaire alsacien-français — base de données collaborative, usage libre et non commercial.<br>
+          Aucune donnée personnelle collectée. Aucun cookie de traçage. Pas de compte requis.
+        </p>
+        <p class="site-footer__credits">Construit avec des mots et une connexion internet. Contributions bienvenues.</p>
+      </div>
+      <nav class="site-footer__nav" aria-label="Liens de pied de page">
+        <a href="#">Proposer une entrée</a>
+        <a href="#">Nous contacter</a>
+        <a href="#">Mentions légales</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    let directionAls = true;
+    let lettreActive = null;
+
+    const btnAls = document.getElementById('btnAls');
+    const btnFr = document.getElementById('btnFr');
+    const switchSep = document.getElementById('switchSep');
+    const champRecherche = document.getElementById('champRecherche');
+    const navAlpha = document.getElementById('navAlpha');
+    const resultatsAlpha = document.getElementById('resultatsAlpha');
+    const resultatsRecherche = document.getElementById('resultatsRecherche');
+    const messageVide = document.getElementById('messageVide');
+    const donsToggle = document.getElementById('donsToggle');
+    const donsContenu = document.getElementById('donsContenu');
+    const donsChevron = document.getElementById('donsChevron');
+    const donsBandeau = document.getElementById('donsBandeau');
+
+    function buildNavAlpha() {
+      navAlpha.innerHTML = '';
+      ALL_LETTERS.forEach(lettre => {
+        const hasEntries = LETTERS_WITH_ENTRIES.includes(lettre);
+        const btn = document.createElement('button');
+        btn.className = 'nav-alpha__btn' + (hasEntries ? '' : ' nav-alpha__btn--disabled');
+        btn.textContent = lettre;
+        btn.setAttribute('role', 'listitem');
+        btn.setAttribute('aria-label', hasEntries ? `Mots en ${lettre}` : `Aucune entrée pour ${lettre}`);
+        if (!hasEntries) {
+          btn.setAttribute('disabled', true);
+          btn.setAttribute('title', 'Aucune entrée pour cette lettre');
+        } else {
+          btn.addEventListener('click', () => afficherLettre(lettre, btn));
+        }
+        navAlpha.appendChild(btn);
+      });
+    }
+
+    function afficherLettre(lettre, btnClique) {
+      champRecherche.value = '';
+      resultatsRecherche.classList.add('hidden');
+      resultatsAlpha.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-alpha__btn--active').forEach(b => b.classList.remove('nav-alpha__btn--active'));
+      btnClique.classList.add('nav-alpha__btn--active');
+      lettreActive = lettre;
+
+      const entrees = DICTIONNAIRE[lettre] || [];
+      messageVide.classList.add('hidden');
+
+      const ancienSection = document.getElementById('section-' + lettre);
+      if (ancienSection) ancienSection.remove();
+
+      const section = document.createElement('section');
+      section.id = 'section-' + lettre;
+      section.className = 'section-lettre';
+      section.setAttribute('aria-label', 'Mots en ' + lettre);
+
+      const header = document.createElement('div');
+      header.className = 'section-lettre__header';
+      header.innerHTML = `
+        <span class="section-lettre__hero" aria-hidden="true">${lettre}</span>
+        <div class="section-lettre__meta">
+          <h2 class="section-lettre__titre">Mots en ${lettre}</h2>
+          <p class="section-lettre__count">${entrees.length} mot${entrees.length > 1 ? 's' : ''}</p>
+        </div>
+      `;
+
+      const sep = document.createElement('div');
+      sep.className = 'section-lettre__separator';
+      sep.setAttribute('aria-hidden', 'true');
+
+      const liste = document.createElement('div');
+      liste.setAttribute('role', 'list');
+      liste.setAttribute('aria-label', `Liste des mots en ${lettre}`);
+
+      entrees.forEach((entree, index) => {
+        const item = creerEntree(entree, index, entrees.length);
+        liste.appendChild(item);
+      });
+
+      section.appendChild(header);
+      section.appendChild(sep);
+      section.appendChild(liste);
+
+      while (resultatsAlpha.firstChild && resultatsAlpha.firstChild !== messageVide) {
+        resultatsAlpha.removeChild(resultatsAlpha.firstChild);
+      }
+      resultatsAlpha.insertBefore(section, messageVide);
+
+      requestAnimationFrame(() => {
+        section.querySelectorAll('.entree').forEach((el, i) => {
+          if (i < 10) {
+            setTimeout(() => el.classList.add('entree--visible'), i * 20);
+          } else {
+            el.classList.add('entree--instant');
+          }
+        });
+      });
+    }
+
+    function creerEntree(entree, index, total) {
+      const item = document.createElement('article');
+      item.className = 'entree';
+      item.setAttribute('role', 'listitem');
+
+      const alsLabel = directionAls ? 'Mot alsacien' : 'Mot français';
+      const frLabel = directionAls ? 'Équivalent français' : 'Équivalent alsacien';
+      const alsVal = directionAls ? entree.als : entree.fr;
+      const frVal = directionAls ? entree.fr : entree.als;
+
+      item.innerHTML = `
+        <div class="entree__col-als">
+          <p class="entree__als" lang="${directionAls ? 'als' : 'fr'}">${alsVal}</p>
+        </div>
+        <div class="entree__separator" aria-hidden="true"></div>
+        <div class="entree__col-fr">
+          <p class="entree__fr" lang="${directionAls ? 'fr' : 'als'}">${frVal}</p>
+          ${entree.ex ? `<p class="entree__ex">${entree.ex}</p>` : ''}
+        </div>
+      `;
+      return item;
+    }
+
+    function switchDirection(versAls) {
+      directionAls = versAls;
+
+      if (versAls) {
+        btnAls.classList.add('switch__btn--active');
+        btnAls.setAttribute('aria-pressed', 'true');
+        btnFr.classList.remove('switch__btn--active');
+        btnFr.setAttribute('aria-pressed', 'false');
+        champRecherche.placeholder = 'Ex : Schtubb, Grumbeere, Hopfele…';
+        switchSep.classList.remove('switch__sep--flipped');
+      } else {
+        btnFr.classList.add('switch__btn--active');
+        btnFr.setAttribute('aria-pressed', 'true');
+        btnAls.classList.remove('switch__btn--active');
+        btnAls.setAttribute('aria-pressed', 'false');
+        champRecherche.placeholder = 'Ex : salon, pomme de terre, seau…';
+        switchSep.classList.add('switch__sep--flipped');
+      }
+
+      if (lettreActive) {
+        const btnActif = Array.from(navAlpha.querySelectorAll('.nav-alpha__btn--active'))[0];
+        if (btnActif) afficherLettre(lettreActive, btnActif);
+      }
+
+      if (champRecherche.value.trim()) {
+        rechercherMot(champRecherche.value.trim());
+      }
+    }
+
+    function rechercherMot(terme) {
+      const termeNorm = terme.toLowerCase().normalize('NFC');
+
+      const resultats = [];
+      Object.values(DICTIONNAIRE).forEach(entrees => {
+        entrees.forEach(entree => {
+          const cible = directionAls
+            ? entree.als.toLowerCase().normalize('NFC')
+            : entree.fr.toLowerCase().normalize('NFC');
+          if (cible.includes(termeNorm)) {
+            resultats.push(entree);
+          }
+        });
+      });
+
+      resultatsAlpha.classList.add('hidden');
+      resultatsRecherche.classList.remove('hidden');
+      resultatsRecherche.innerHTML = '';
+
+      document.querySelectorAll('.nav-alpha__btn--active').forEach(b => b.classList.remove('nav-alpha__btn--active'));
+      lettreActive = null;
+
+      if (resultats.length === 0) {
+        resultatsRecherche.innerHTML = `
+          <p class="search-resultats__titre">Aucun résultat</p>
+          <p class="search-resultats__aucun">Aucun résultat pour « ${terme} ». Ce mot n'est peut-être pas encore dans notre base — ou vous tenez une variante dialectale qu'on serait ravis d'ajouter.</p>
+          <button class="search-resultats__cta" type="button">Proposer une entrée</button>
+        `;
+        return;
+      }
+
+      const titre = document.createElement('p');
+      titre.className = 'search-resultats__titre';
+      titre.textContent = `Résultats pour « ${terme} »`;
+
+      const count = document.createElement('p');
+      count.className = 'search-resultats__count';
+      count.textContent = `${resultats.length} résultat${resultats.length > 1 ? 's' : ''}`;
+
+      const liste = document.createElement('div');
+      liste.setAttribute('role', 'list');
+
+      resultats.forEach((entree, index) => {
+        const item = creerEntree(entree, index, resultats.length);
+        if (index >= 10) item.classList.add('entree--instant');
+        liste.appendChild(item);
+      });
+
+      resultatsRecherche.appendChild(titre);
+      resultatsRecherche.appendChild(count);
+      resultatsRecherche.appendChild(liste);
+
+      requestAnimationFrame(() => {
+        liste.querySelectorAll('.entree').forEach((el, i) => {
+          if (i < 10) {
+            setTimeout(() => el.classList.add('entree--visible'), i * 20);
+          } else {
+            el.classList.add('entree--instant');
+          }
+        });
+      });
+    }
+
+    btnAls.addEventListener('click', () => switchDirection(true));
+    btnFr.addEventListener('click', () => switchDirection(false));
+
+    let searchTimeout;
+    champRecherche.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      const val = e.target.value.trim();
+      if (!val) {
+        resultatsRecherche.classList.add('hidden');
+        resultatsAlpha.classList.remove('hidden');
+        if (messageVide && !lettreActive) {
+          messageVide.classList.remove('hidden');
+        }
+        return;
+      }
+      searchTimeout = setTimeout(() => rechercherMot(val), 220);
+    });
+
+    donsToggle.addEventListener('click', () => {
+      const estOuvert = !donsContenu.hidden;
+      donsContenu.hidden = estOuvert;
+      donsToggle.setAttribute('aria-expanded', String(!estOuvert));
+      donsBandeau.classList.toggle('dons-bandeau--collapsed', !estOuvert);
+      donsChevron.classList.toggle('dons-bandeau__chevron--open', !estOuvert);
+    });
+
+    buildNavAlpha();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+- https://www.awwwards.com/sites/editorial-new | typographie,éditorial,serif,SOTD,long-form | 22/03/2026

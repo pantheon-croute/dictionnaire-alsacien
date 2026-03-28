@@ -1,0 +1,16 @@
+=== RAPPORT FETCH WIKTIONNAIRE ===
+Catégorie source : alémanique
+Entrées totales : 100
+Pages ignorées : 0
+Lettres couvertes : 5/26
+
+Détail par lettre :
+  A : 24 entrées
+  B : 54 entrées
+  À : 19 entrées
+  Ã : 1 entrées
+  Ä : 2 entrées
+
+Licence : CC-BY-SA 4.0
+Attribution à ajouter : « Données issues du Wiktionnaire (fr.wiktionary.org), licence CC-BY-SA 4.0 »
+À placer dans le footer du site.

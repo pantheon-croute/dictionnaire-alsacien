@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wörterbuch — Dictionnaire alsacien-français en ligne</title>
+  <meta name="description" content="Traduisez de l'alsacien au français et du français à l'alsacien. Dictionnaire collaboratif, navigation alphabétique, usage libre. Sans compte, sans trackers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #FAF7F2;
+      --color-surface: #F2EDE6;
+      --color-surface-hover: #EAE3D8;
+      --color-border: #D9CFC5;
+      --color-text: #1C1410;
+      --color-muted: #6B5E52;
+      --color-primary: #B22222;
+      --color-primary-dark: #8B0000;
+      --color-accent: #C8943A;
+      --font-title: 'Playfair Display', Georgia, serif;
+      --font-body: 'Libre Baskerville', 'Book Antiqua', Palatino, serif;
+      --font-example: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
+      --max-width: 860px;
+      --max-width-nav: 1100px;
+      --radius: 4px;
+      --transition-fast: 150ms ease-out;
+      --transition-mid: 250ms ease-in-out;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--color-text);
+    }
+
+    body {
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .porte {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .porte__deco {
+      margin-bottom: 3rem;
+    }
+
+    .porte__cigogne {
+      display: block;
+      margin: 0 auto 1.5rem;
+    }
+
+    .porte__titre {
+      font-family: var(--font-title);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .porte__headline {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 900;
+      color: var(--color-bg);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .porte__subline {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+
+    .porte__form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .porte__input-wrap {
+      position: relative;
+    }
+
+    .porte__input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 0 1.5rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-bg);
+      outline: none;
+      transition: border-color var(--transition-fast);
+      letter-spacing: 0.1em;
+    }
+
+    .porte__input::placeholder {
+      color: rgba(250, 247, 242, 0.3);
+      letter-spacing: 0.05em;
+    }
+
+    .porte__input:focus {
+      border-color: var(--color-primary);
+    }
+
+    .porte__cta {
+      height: 52px;
+      background: var(--color-primary);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-bg);
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: background var(--transition-fast);
+    }
+
+    .porte__cta:hover {
+      background: var(--color-primary-dark);
+    }
+
+    .porte__erreur {
+      font-size: 0.875rem;
+      color: var(--color-primary);
+      min-height: 1.25rem;
+      margin-top: 0.25rem;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .porte__erreur--visible {
+      opacity: 1;
+    }
+
+    .porte__body {
+      font-size: 0.8125rem;
+      color: rgba(107, 94, 82, 0.7);
+      line-height: 1.6;
+      margin-top: 2.5rem;
+    }
+
+    .porte__body a {
+      color: rgba(107, 94, 82, 0.8);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .porte__separateur {
+      width: 48px;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 2.5rem auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="porte" role="main">
+
+    <div class="porte__deco">
+      <svg class="porte__cigogne" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M20 8 C20 8 18 10 18 13 C18 15 19 16 19 17 L19 22" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 22 C19 22 14 24 12 27 C10 30 11 32 13 32" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 22 C19 22 22 25 22 28 L22 33" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M22 33 L19 33 M22 33 L25 33" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M13 32 L10 32 M13 32 L16 32" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 17 C19 17 24 15 27 14 C29 13 30 12 30 12" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M30 12 L33 11 M30 12 L31 15" stroke="#B22222" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="20" cy="7" r="1.5" fill="#B22222"/>
+      </svg>
+      <p class="porte__titre">Dictionnaire alsacien</p>
+    </div>
+
+    <h1 class="porte__headline">Vous frappez à la bonne porte.</h1>
+    <p class="porte__subline">Cet espace est réservé aux contributeurs et aux partenaires du dictionnaire. Si vous avez reçu un accès, vous savez quoi faire.</p>
+
+    <form class="porte__form" id="porteForm" novalidate>
+      <div class="porte__input-wrap">
+        <input
+          class="porte__input"
+          type="password"
+          id="motDePasse"
+          placeholder="Mot de passe"
+          autocomplete="current-password"
+          aria-label="Mot de passe d'accès"
+          required
+        >
+      </div>
+      <p class="porte__erreur" id="erreurMdp" role="alert" aria-live="polite"></p>
+      <button type="submit" class="porte__cta">Entrer</button>
+    </form>
+
+    <div class="porte__separateur" aria-hidden="true"></div>
+
+    <p class="porte__body">
+      Si vous pensez que vous devriez avoir accès et que vous ne l'avez pas encore,
+      <a href="mailto:contact@worterbuch.fr">écrivez-nous</a>. On répond.
+    </p>
+
+  </main>
+
+  <script>
+    const MDP_CORRECT = 'demo2026';
+
+    const form = document.getElementById('porteForm');
+    const input = document.getElementById('motDePasse');
+    const erreur = document.getElementById('erreurMdp');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const valeur = input.value.trim();
+
+      if (valeur === MDP_CORRECT) {
+        erreur.textContent = '';
+        erreur.classList.remove('porte__erreur--visible');
+        input.disabled = true;
+        form.querySelector('.porte__cta').disabled = true;
+
+        document.body.style.transition = 'opacity 400ms ease';
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+          window.location.href = 'dictionnaire-alsacien.html';
+        }, 420);
+      } else {
+        erreur.textContent = 'Ce n\'est pas ça. Réessayez ou contactez-nous.';
+        erreur.classList.add('porte__erreur--visible');
+        input.select();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      if (erreur.classList.contains('porte__erreur--visible')) {
+        erreur.classList.remove('porte__erreur--visible');
+      }
+    });
+  </script>
+</body>
+</html>

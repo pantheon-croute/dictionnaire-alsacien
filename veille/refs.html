@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veille — Dictionnaire Alsacien</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg:      #0f0f0f;
+      --color-surface: #181818;
+      --color-border:  #2a2a2a;
+      --color-text:    #f0ebe0;
+      --color-muted:   #7a7570;
+      --color-accent:  #c8392b;
+      --color-accent2: #e8c97a;
+      --color-danger:  #8b2020;
+      --color-like:    #c8392b;
+      --color-excl:    #3d3d3d;
+      --radius:        6px;
+      --mono:          'IBM Plex Mono', monospace;
+      --sans:          'IBM Plex Sans', sans-serif;
+    }
+
+    html { font-size: 16px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .site-header {
+      border-bottom: 1px solid var(--color-border);
+      padding: 2.5rem 2rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .site-header__eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--color-accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .site-header__title {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .site-header__meta {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      display: flex;
+      gap: 2rem;
+    }
+
+    .site-header__meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* FILTERS */
+    .filters-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .filters-bar__label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      margin-right: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tag-btn {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-muted);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 150ms ease-out;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-text);
+    }
+
+    .tag-btn.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+
+    .tag-btn.reset {
+      border-color: var(--color-border);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .tag-btn.reset:hover {
+      border-color: var(--color-text);
+    }
+
+    /* GRID */
+    .refs-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 860px) {
+      .refs-grid { grid-template-columns: 1fr; }
+    }
+
+    /* CARD */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 200ms ease-out, transform 150ms ease-out;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: #3a3a3a;
+      transform: translateY(-1px);
+    }
+
+    .card.hidden { display: none; }
+
+    .card__section {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .card__url {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--color-accent2);
+      text-decoration: none;
+      word-break: break-all;
+      line-height: 1.4;
+      transition: color 150ms ease-out;
+    }
+
+    .card__url:hover { color: #fff; text-decoration: underline; }
+
+    .card__desc {
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .card__tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--color-muted);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: color 150ms, border-color 150ms;
+      letter-spacing: 0.03em;
+    }
+
+    .card__tag:hover {
+      color: var(--color-text);
+      border-color: var(--color-muted);
+    }
+
+    .card__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .btn-action {
+      height: 48px;
+      padding: 0 1.25rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--color-muted);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 150ms ease-out;
+      font-weight: 500;
+    }
+
+    .btn-action:hover { border-color: var(--color-text); color: var(--color-text); }
+
+    .btn-action.like:hover { border-color: var(--color-like); color: var(--color-like); }
+    .btn-action.like.active { background: var(--color-like); border-color: var(--color-like); color: #fff; }
+
+    .btn-action.excl:hover { border-color: #666; color: #999; }
+    .btn-action.excl.active { background: #2a2a2a; border-color: #444; color: #666; }
+
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.18); }
+      70%  { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+
+    .btn-action.pop { animation: pop 250ms ease-out; }
+
+    /* PANEL BAS */
+    .session-panel {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .session-panel__title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .session-panel__cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 640px) { .session-panel__cols { grid-template-columns: 1fr; } }
+
+    .session-panel__col-title {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    .session-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .session-list li {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--color-text);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .session-list.empty::after {
+      content: '—';
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    /* TOAST */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 200ms ease-out, transform 200ms ease-out;
+      max-width: 320px;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.like-toast { border-color: var(--color-like); }
+    .toast.excl-toast { border-color: #444; }
+
+    /* SECTION divider */
+    .section-divider {
+      max-width: 1280px;
+      margin: 0 auto 0;
+      padding: 0 2rem;
+    }
+
+    .section-divider h2 {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 1.25rem 0 0.75rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 0.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn-action.pop { animation: none; }
+      .card { transition: none; }
+      .toast { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-header__eyebrow">Veilleur — Recherche fraîche</p>
+  <h1 class="site-header__title">Dictionnaire Alsacien</h1>
+  <div class="site-header__meta">
+    <span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3.5V6.5L8 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      22.03.2026
+    </span>
+    <span id="ref-count">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 6h5M3.5 4h5M3.5 8h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span id="count-display">— refs</span>
+    </span>
+    <span>Dictionnaire régional / langue alsacienne</span>
+  </div>
+</header>
+
+<div class="filters-bar">
+  <span class="filters-bar__label">Filtrer</span>
+  <button class="tag-btn reset active" data-tag="*">Tout</button>
+</div>
+
+<main class="refs-grid" id="refs-grid">
+
+  <!-- SECTION: Dictionnaires langues régionales -->
+  <div class="card" data-tags="sombre,typographie,breton,lexicographie,sobre,éditorial" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://devri.bzh/" target="_blank" rel="noopener" class="card__url">devri.bzh</a>
+    <p class="card__desc">Dictionnaire diachronique du breton — typographie soignée, hiérarchie claire, projet indépendant de qualité. Exemple de ce qu'un dictionnaire numérique de langue régionale peut faire avec peu de moyens et beaucoup d'intention. Référence sectorielle directe.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://devri.bzh/" data-tags="breton,lexicographie,typographie,sombre">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://devri.bzh/" data-tags="breton,lexicographie,typographie,sombre">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="clair,éditorial,référence,dictionnaires,typographie" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://www.lexilogos.com/" target="_blank" rel="noopener" class="card__url">lexilogos.com</a>
+    <p class="card__desc">Portail de référence pour dictionnaires multilingues incluant alsacien, breton, occitan, basque. Hiérarchie éditoriale assumée, lisibilité exemplaire. Design fonctionnel vieillissant — à étudier pour la logique de contenu, pas pour l'esthétique. Référence sectorielle directe.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.lexilogos.com/" data-tags="dictionnaires,éditorial,référence,multilingue">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.lexilogos.com/" data-tags="dictionnaires,éditorial,référence,multilingue">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="basque,bilingue,éducatif,moderne,rouge,langue-minoritaire" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://on.eus/" target="_blank" rel="noopener" class="card__url">on.eus</a>
+    <p class="card__desc">Portail officiel langue basque — palette rouge assumée, interface claire pour communauté linguistique minoritaire active. Dictionnaires, traducteur automatique neural, ressources pratiques. Exemple d'ambition digitale pour langue régionale en bonne santé.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://on.eus/" data-tags="basque,bilingue,éducatif,moderne,rouge">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://on.eus/" data-tags="basque,bilingue,éducatif,moderne,rouge">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="institutionnel,alsacien,langue-régionale,patrimoine" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://www.olcalsace.org/" target="_blank" rel="noopener" class="card__url">olcalsace.org</a>
+    <p class="card__desc">Office pour la Langue et les Cultures d'Alsace — référence institutionnelle incontournable. Lexiques alsaciens thématiques, ressources pédagogiques, valorisation du dialecte. À surpasser en qualité de design. Pertinence sectorielle maximale.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.olcalsace.org/" data-tags="alsacien,institutionnel,langue-régionale,patrimoine">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.olcalsace.org/" data-tags="alsacien,institutionnel,langue-régionale,patrimoine">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="breton,sobre,éducatif,utilitaire,langue-minoritaire" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://displeger.bzh/" target="_blank" rel="noopener" class="card__url">displeger.bzh</a>
+    <p class="card__desc">Conjugueur de verbes bretons — sobre, direct, fonctionnel. Exemple de projet numérique indépendant pour langue régionale qui privilégie la précision au détriment du spectacle. Utile comme référence UX minimaliste.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://displeger.bzh/" data-tags="breton,sobre,éducatif,utilitaire">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://displeger.bzh/" data-tags="breton,sobre,éducatif,utilitaire">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="gallois,langue-minoritaire,éducatif,institutionnel,ressources" data-section="Dictionnaires langues régionales / minoritaires">
+    <span class="card__section">Dictionnaires langues régionales</span>
+    <a href="https://learnwelsh.cymru/" target="_blank" rel="noopener" class="card__url">learnwelsh.cymru</a>
+    <p class="card__desc">Centre national pour l'apprentissage du gallois — ressources numériques complètes pour langue régionale active. Pertinence directe comme référence d'ambition : ce que peut faire une région qui investit dans sa langue minoritaire en ligne.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://learnwelsh.cymru/" data-tags="gallois,langue-minoritaire,éducatif,institutionnel">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://learnwelsh.cymru/" data-tags="gallois,langue-minoritaire,éducatif,institutionnel">✕ Exclure</button>
+    </div>
+  </div>
+
+  <!-- SECTION: Musées et culture régionale -->
+  <div class="card" data-tags="musée,néerlandais,typographie,bold,couleur,award,awwwards" data-section="Musées et culture régionale">
+    <span class="card__section">Musées et culture régionale</span>
+    <a href="https://franshalsmuseum.nl/en" target="_blank" rel="noopener" class="card__url">franshalsmuseum.nl</a>
+    <p class="card__desc">Frans Hals Museum Haarlem — Awwwards SOTD + CSS Design Award. Millennial pink, typographie en mouvement, écrans scindés, rupture totale avec le template muséal. Construit par Build in Amsterdam. Montre qu'un musée "classique" peut avoir un site radicalement contemporain. Référence DA majeure.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://franshalsmuseum.nl/en" data-tags="musée,typographie,bold,couleur,awwwards-sotd">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://franshalsmuseum.nl/en" data-tags="musée,typographie,bold,couleur,awwwards-sotd">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="musée,typographie,palette-dynamique,award,premium,identité-adaptative" data-section="Musées et culture régionale">
+    <span class="card__section">Musées et culture régionale</span>
+    <a href="https://www.vangoghmuseum.nl/en" target="_blank" rel="noopener" class="card__url">vangoghmuseum.nl</a>
+    <p class="card__desc">Van Gogh Museum — Lovie Awards (Gold), Webby Awards, GLAMi Design Award. Palette adaptée par œuvre exposée, typographie décision centrale gardée au rebranding. Studio Dumbar. Exemple d'identité adaptative : une couleur par œuvre, jamais tiède. Ce que "typographie assumée sur fond maîtrisé" veut dire pour un grand musée.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.vangoghmuseum.nl/en" data-tags="musée,typographie,palette-dynamique,award,premium">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.vangoghmuseum.nl/en" data-tags="musée,typographie,palette-dynamique,award,premium">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="musée,danemark,minimal,épuré,awwwards,sobre" data-section="Musées et culture régionale">
+    <span class="card__section">Musées et culture régionale</span>
+    <a href="https://brandts.dk/" target="_blank" rel="noopener" class="card__url">brandts.dk</a>
+    <p class="card__desc">Kunstmuseum Brandts (Odense, Danemark) — Awwwards SOTD. Sobre, propre, chaque élément placé avec intention. Stupid Studio. Preuve que sobre ≠ vide : espace généreux, typographie ancrée, rien en trop. Référence directe pour l'équilibre Larousse-sobriété.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://brandts.dk/" data-tags="musée,minimal,épuré,awwwards-sotd,sobre">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://brandts.dk/" data-tags="musée,minimal,épuré,awwwards-sotd,sobre">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="musée,patrimoine,alsacien,open-air,identité-régionale,écomusée" data-section="Musées et culture régionale">
+    <span class="card__section">Musées et culture régionale</span>
+    <a href="https://www.ecomusee.alsace/en/" target="_blank" rel="noopener" class="card__url">ecomusee.alsace</a>
+    <p class="card__desc">Écomusée d'Alsace (Ungersheim) — plus grand musée à ciel ouvert de France, 80 maisons reconstituées, mode de vie alsacien traditionnel. Référence patrimoniale directe. Contenu riche sur colombages, artisanat, culture alsacienne. À surpasser visuellement.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.ecomusee.alsace/en/" data-tags="alsacien,patrimoine,musée,identité-régionale">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.ecomusee.alsace/en/" data-tags="alsacien,patrimoine,musée,identité-régionale">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="ethnographique,sobriété,patrimoine,clair,musée" data-section="Musées et culture régionale">
+    <span class="card__section">Musées et culture régionale</span>
+    <a href="https://emz.hr/en/homepage/" target="_blank" rel="noopener" class="card__url">emz.hr</a>
+    <p class="card__desc">Musée ethnographique de Zagreb — interface propre pour musée à contenu dense. Hiérarchie claire, navigation sobre pour collection ethnographique. Pertinent pour UX d'un dictionnaire à forte dimension patrimoniale.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://emz.hr/en/homepage/" data-tags="ethnographique,sobriété,patrimoine,musée">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://emz.hr/en/homepage/" data-tags="ethnographique,sobriété,patrimoine,musée">✕ Exclure</button>
+    </div>
+  </div>
+
+  <!-- SECTION: Typographie et fonderies -->
+  <div class="card" data-tags="typographie,foundry,award,Red-Dot,Webby,premium,suisse,référence" data-section="Typographie et fonderies">
+    <span class="card__section">Typographie et fonderies</span>
+    <a href="https://klim.co.nz/" target="_blank" rel="noopener" class="card__url">klim.co.nz</a>
+    <p class="card__desc">Klim Type Foundry — Webby Award, Red Dot Design Award, Communication Arts. Référence absolue d'interface fonderie : élégance suisse moderniste, testeurs interactifs, inspecteur de glyphes, easter eggs pour designers. Springload. Ce que "typographie décision centrale" signifie. À consulter avant tout choix typographique pour le projet.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://klim.co.nz/" data-tags="typographie,foundry,award,suisse,premium">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://klim.co.nz/" data-tags="typographie,foundry,award,suisse,premium">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="typographie,foundry,allemand,sobre,éditorial,germanique" data-section="Typographie et fonderies">
+    <span class="card__section">Typographie et fonderies</span>
+    <a href="https://www.typemates.com/" target="_blank" rel="noopener" class="card__url">typemates.com</a>
+    <p class="card__desc">TypeMates — fonderie typographique allemande (Leipzig/Hamburg). Sobre, précis, typographie au service du sens. Pertinence directe pour le registre germanique/alsacien du projet. Site avec testeurs interactifs, articles de fond. Ce qu'une fonderie allemande contemporaine fait de bien.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.typemates.com/" data-tags="typographie,foundry,allemand,sobre,éditorial">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.typemates.com/" data-tags="typographie,foundry,allemand,sobre,éditorial">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="typographie,foundry,allemand,gothique,revival,fraktur,germanique" data-section="Typographie et fonderies">
+    <span class="card__section">Typographie et foundries</span>
+    <a href="https://fdi-type.de/" target="_blank" rel="noopener" class="card__url">fdi-type.de</a>
+    <p class="card__desc">FDI Type Foundry (Weimar) — spécialisée revivals typographiques allemands : Fraktur, Reklameschrift, gothiques du XIXe. Pertinence directe pour la "résonance germanique sobre" du brief. Catalogue riche de caractères à identité forte. Référence pour sélection typographique avec ancrage culturel alsacien.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://fdi-type.de/" data-tags="typographie,foundry,allemand,fraktur,revival,germanique">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://fdi-type.de/" data-tags="typographie,foundry,allemand,fraktur,revival,germanique">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="typographie,foundry,london,award,Aperçu,minimal,siteinspire" data-section="Typographie et fonderies">
+    <span class="card__section">Typographie et fonderies</span>
+    <a href="https://www.colophon-foundry.org" target="_blank" rel="noopener" class="card__url">colophon-foundry.org</a>
+    <p class="card__desc">Colophon Foundry (London) — Siteinspire. Aperçu, Basis Grotesque, Fortescue. Design épuré, typographie comme identité et non comme décoration. Répertoire de qualité pour un projet qui cherche précision + sobriété. Désormais distribué via Monotype mais le site reste une référence de présentation.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.colophon-foundry.org" data-tags="typographie,foundry,minimal,épuré,award">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.colophon-foundry.org" data-tags="typographie,foundry,minimal,épuré,award">✕ Exclure</button>
+    </div>
+  </div>
+
+  <!-- SECTION: Apps éducatives / apprentissage -->
+  <div class="card" data-tags="éducatif,ludique,gamification,couleur,personnage,UX,référence-directe" data-section="Apps éducatives et ludiques">
+    <span class="card__section">Apps éducatives et ludiques</span>
+    <a href="https://www.duolingo.com/" target="_blank" rel="noopener" class="card__url">duolingo.com</a>
+    <p class="card__desc">Duolingo — référence directe du brief. DDS v1.0 : DIN Rounded, Feather Bold, système de badges, XP, streaks. 55% de rétention utilisateur. À étudier exclusivement pour la mécanique de progression et la logique de gamification — pas pour l'esthétique générique à éviter. Ce que "ludique" fait techniquement.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.duolingo.com/" data-tags="éducatif,ludique,gamification,UX,référence-directe">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.duolingo.com/" data-tags="éducatif,ludique,gamification,UX,référence-directe">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="traduction,premium,minimal,épuré,Red-Dot,interface,fonctionnel" data-section="Apps éducatives et ludiques">
+    <span class="card__section">Apps éducatives et ludiques</span>
+    <a href="https://www.deepl.com/" target="_blank" rel="noopener" class="card__url">deepl.com</a>
+    <p class="card__desc">DeepL — Red Dot Design Award. Interface de traduction premium : minimalisme fonctionnel, form follows function, chaque pixel décidé. Référence "fonctionnel ≠ ennuyeux" — la sobriété peut être premium. Ce que l'interface de recherche bidirectionnelle alsacien/français pourrait incarner.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.deepl.com/" data-tags="traduction,premium,minimal,Red-Dot,fonctionnel">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.deepl.com/" data-tags="traduction,premium,minimal,Red-Dot,fonctionnel">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="dictionnaire,bilingue,contextuel,interface,minimal,référence" data-section="Apps éducatives et ludiques">
+    <span class="card__section">Apps éducatives et ludiques</span>
+    <a href="https://linguee.com/" target="_blank" rel="noopener" class="card__url">linguee.com</a>
+    <p class="card__desc">Linguee — 1 milliard de phrases d'exemple issues de traducteurs humains. Interface dictionnaire bilingue minimal et fonctionnel. Référence directe pour l'UX de recherche d'un mot et son contexte d'usage. Structure simple qui fait une seule chose très bien.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://linguee.com/" data-tags="dictionnaire,bilingue,contextuel,minimal">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://linguee.com/" data-tags="dictionnaire,bilingue,contextuel,minimal">✕ Exclure</button>
+    </div>
+  </div>
+
+  <!-- SECTION: Identité alsacienne et éditorial régional -->
+  <div class="card" data-tags="alsace,identité-régionale,showcase,employer-brand,2024,premium" data-section="Identité alsacienne et éditorial régional">
+    <span class="card__section">Identité alsacienne et éditorial régional</span>
+    <a href="https://www.alsace.com/en/" target="_blank" rel="noopener" class="card__url">alsace.com</a>
+    <p class="card__desc">Imagine Alsace — nouveau site vitrine ADIRA (2024) pour la marque employeur régionale "Bien en Alsace". Cible talents, investisseurs, étudiants. Identité régionale contemporaine, ambition internationale. Référence directe pour voir comment l'Alsace se présente elle-même en 2024.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.alsace.com/en/" data-tags="alsace,identité-régionale,employer-brand,2024">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.alsace.com/en/" data-tags="alsace,identité-régionale,employer-brand,2024">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="tourisme,alsace,identité-régionale,patrimoine,culture,officiel" data-section="Identité alsacienne et éditorial régional">
+    <span class="card__section">Identité alsacienne et éditorial régional</span>
+    <a href="https://www.visit.alsace/en/" target="_blank" rel="noopener" class="card__url">visit.alsace</a>
+    <p class="card__desc">Visit Alsace — site officiel tourisme Alsace (Thuria). Culture, traditions, dialecte alsacien valorisés. Palette rouge/blanc, identité visuelle régionale assumée. Référence pour voir comment l'identité visuelle alsacienne est déployée officiellement. À dépasser en registre lexicographique.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.visit.alsace/en/" data-tags="tourisme,alsace,identité-régionale,patrimoine,culture">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.visit.alsace/en/" data-tags="tourisme,alsace,identité-régionale,patrimoine,culture">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="alsace,strasbourg,culture,bilingue,institutionnel,dialecte" data-section="Identité alsacienne et éditorial régional">
+    <span class="card__section">Identité alsacienne et éditorial régional</span>
+    <a href="https://int.strasbourg.eu/alsatian-culture" target="_blank" rel="noopener" class="card__url">strasbourg.eu/alsatian-culture</a>
+    <p class="card__desc">Ville de Strasbourg — page culture alsacienne. Contenu éditorial sur identité alsacienne, dialecte comme richesse, bilinguisme franco-allemand. Approche éditoriale sobre et documentée. Référence de ton éditorial pour le projet : lettrés, engagés, pas folkloriques.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://int.strasbourg.eu/alsatian-culture" data-tags="alsace,culture,dialecte,éditorial,institutionnel">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://int.strasbourg.eu/alsatian-culture" data-tags="alsace,culture,dialecte,éditorial,institutionnel">✕ Exclure</button>
+    </div>
+  </div>
+
+  <!-- SECTION: Design éditorial web premium -->
+  <div class="card" data-tags="dictionnaire,français,éditorial,référence,typographie,Larousse" data-section="Design éditorial web premium">
+    <span class="card__section">Design éditorial web premium</span>
+    <a href="https://www.larousse.fr/" target="_blank" rel="noopener" class="card__url">larousse.fr</a>
+    <p class="card__desc">Larousse.fr — référence directe brief. Cheltenham Light pour définitions, Futura Bold pour entrées. Design Fidésio. Hiérarchie éditoriale exemplaire, logique encyclopédique maîtrisée. Sobre, pas spectaculaire — c'est exactement le registre à intégrer et à dépasser avec la dimension ludique du brief.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.larousse.fr/" data-tags="dictionnaire,éditorial,typographie,Larousse,référence-directe">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.larousse.fr/" data-tags="dictionnaire,éditorial,typographie,Larousse,référence-directe">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="culture,sombre,typographie,SOTD,award,éditorial,dark" data-section="Design éditorial web premium">
+    <span class="card__section">Design éditorial web premium</span>
+    <a href="https://www.awwwards.com/sites/museums-for-the-21st-century" target="_blank" rel="noopener" class="card__url">awwwards.com — Museums for the 21st Century</a>
+    <p class="card__desc">Museums for the 21st Century — Awwwards SOTD. Palette #171615 (noir profond) + blanc, typographie Art & Culture. Score 7.53/10. Exemple de fond sombre assumé pour contexte patrimonial éducatif. Référence pour l'équilibre sombre/élégant sans tomber dans le dark mode générique.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.awwwards.com/sites/museums-for-the-21st-century" data-tags="culture,sombre,typographie,SOTD,éditorial">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.awwwards.com/sites/museums-for-the-21st-century" data-tags="culture,sombre,typographie,SOTD,éditorial">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="typographie,éditorial,serif,award,SOTD,sérif,long-form" data-section="Design éditorial web premium">
+    <span class="card__section">Design éditorial web premium</span>
+    <a href="https://www.awwwards.com/sites/editorial-new" target="_blank" rel="noopener" class="card__url">awwwards.com — Editorial New</a>
+    <p class="card__desc">Editorial New sur Awwwards — SOTD pour la police elle-même. Sérif étroit et précis conçu pour le long-form avec une personnalité forte. Pertinent pour le registre Larousse du brief : définitions denses qui méritent une typo à caractère. Alternative sérieuse à Cheltenham pour les entrées de dictionnaire.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.awwwards.com/sites/editorial-new" data-tags="typographie,éditorial,serif,SOTD,long-form">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.awwwards.com/sites/editorial-new" data-tags="typographie,éditorial,serif,SOTD,long-form">✕ Exclure</button>
+    </div>
+  </div>
+
+  <div class="card" data-tags="dictionnaire,multilingue,europe,patrimoine,institutionnel,langues-régionales" data-section="Design éditorial web premium">
+    <span class="card__section">Design éditorial web premium</span>
+    <a href="https://www.dictionaryportal.eu/en/" target="_blank" rel="noopener" class="card__url">dictionaryportal.eu</a>
+    <p class="card__desc">European Dictionary Portal — portail institutionnel des dictionnaires européens dont langues régionales (Breton, Alsacien, Basque). Référence pour la cartographie du secteur et la compréhension de l'écosystème lexicographique en ligne. Design utilitaire vieillissant — utile pour le contenu, pas pour l'esthétique.</p>
+    <div class="card__tags"></div>
+    <div class="card__actions">
+      <button class="btn-action like" data-url="https://www.dictionaryportal.eu/en/" data-tags="dictionnaire,europe,multilingue,langues-régionales,institutionnel">♥ Liker</button>
+      <button class="btn-action excl" data-url="https://www.dictionaryportal.eu/en/" data-tags="dictionnaire,europe,multilingue,langues-régionales,institutionnel">✕ Exclure</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- PANEL SESSION -->
+<div style="border-top: 1px solid var(--color-border); padding: 0 2rem; max-width: 1280px; margin: 0 auto;">
+  <div class="session-panel__title" style="padding-top: 1.5rem; font-family: var(--mono); font-size: 0.75rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.1em;">Session en cours</div>
+  <div class="session-panel__cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding-bottom: 3rem;">
+    <div>
+      <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--color-accent); margin-bottom: 0.75rem; letter-spacing: 0.06em;">LIKÉS</div>
+      <ul id="session-liked" class="session-list empty"></ul>
+    </div>
+    <div>
+      <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--color-muted); margin-bottom: 0.75rem; letter-spacing: 0.06em;">EXCLUS</div>
+      <ul id="session-excl" class="session-list empty"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+  // === DATA ===
+  const cards = document.querySelectorAll('.card');
+  const grid = document.getElementById('refs-grid');
+  const filtersBar = document.querySelector('.filters-bar');
+  const countEl = document.getElementById('count-display');
+
+  // Build tags set from all cards
+  const allTags = new Set();
+  cards.forEach(card => {
+    const tags = card.dataset.tags.split(',').map(t => t.trim()).filter(Boolean);
+    tags.forEach(t => allTags.add(t));
+    // Render tags in card
+    const tagContainer = card.querySelector('.card__tags');
+    tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'card__tag';
+      span.textContent = t;
+      span.dataset.tag = t;
+      span.addEventListener('click', () => activateFilter(t));
+      tagContainer.appendChild(span);
+    });
+  });
+
+  // Build filter buttons
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.dataset.tag = tag;
+    btn.textContent = tag;
+    btn.addEventListener('click', () => activateFilter(tag));
+    filtersBar.appendChild(btn);
+  });
+
+  let activeTag = '*';
+
+  function activateFilter(tag) {
+    activeTag = tag;
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tag === tag || (tag === '*' && btn.dataset.tag === '*'));
+    });
+    let visible = 0;
+    cards.forEach(card => {
+      const tags = card.dataset.tags.split(',').map(t => t.trim());
+      if (tag === '*' || tags.includes(tag)) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    countEl.textContent = `${visible} ref${visible > 1 ? 's' : ''}`;
+  }
+
+  // Init count
+  countEl.textContent = `${cards.length} refs`;
+
+  // Reset filter
+  document.querySelector('.tag-btn.reset').addEventListener('click', () => activateFilter('*'));
+
+  // === ACTIONS ===
+  const sessionLiked = [];
+  const sessionExcl = [];
+
+  function toast(msg, type) {
+    const container = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = `toast ${type}-toast`;
+    t.textContent = msg;
+    container.appendChild(t);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => t.classList.add('show'));
+    });
+    setTimeout(() => {
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 250);
+    }, 2800);
+  }
+
+  function updateSessionPanel() {
+    const likedList = document.getElementById('session-liked');
+    const exclList = document.getElementById('session-excl');
+
+    likedList.innerHTML = '';
+    likedList.classList.toggle('empty', sessionLiked.length === 0);
+    sessionLiked.forEach(url => {
+      const li = document.createElement('li');
+      li.textContent = url.replace(/^https?:\/\//, '');
+      likedList.appendChild(li);
+    });
+
+    exclList.innerHTML = '';
+    exclList.classList.toggle('empty', sessionExcl.length === 0);
+    sessionExcl.forEach(url => {
+      const li = document.createElement('li');
+      li.textContent = url.replace(/^https?:\/\//, '');
+      exclList.appendChild(li);
+    });
+  }
+
+  document.querySelectorAll('.btn-action.like').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const url = btn.dataset.url;
+      const tags = btn.dataset.tags;
+      const isActive = btn.classList.contains('active');
+
+      btn.classList.remove('pop');
+      void btn.offsetWidth;
+      btn.classList.add('pop');
+
+      if (!isActive) {
+        btn.classList.add('active');
+        btn.textContent = '♥ Liké';
+        if (!sessionLiked.includes(url)) sessionLiked.push(url);
+        updateSessionPanel();
+        toast(`Liké : ${url.replace(/^https?:\/\//, '')}`, 'like');
+        try {
+          await fetch('/api/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, tags })
+          });
+        } catch(e) { toast('Serveur non disponible — sauvegarde locale uniquement', 'excl'); }
+      } else {
+        btn.classList.remove('active');
+        btn.textContent = '♥ Liker';
+        const idx = sessionLiked.indexOf(url);
+        if (idx > -1) sessionLiked.splice(idx, 1);
+        updateSessionPanel();
+        toast(`Retiré des likés`, 'like');
+        try {
+          await fetch('/api/like', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, tags })
+          });
+        } catch(e) {}
+      }
+    });
+  });
+
+  document.querySelectorAll('.btn-action.excl').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const url = btn.dataset.url;
+      const tags = btn.dataset.tags;
+      const isActive = btn.classList.contains('active');
+
+      if (!isActive) {
+        btn.classList.add('active');
+        btn.textContent = '✕ Exclu';
+        if (!sessionExcl.includes(url)) sessionExcl.push(url);
+        updateSessionPanel();
+        toast(`Exclu : ${url.replace(/^https?:\/\//, '')}`, 'excl');
+        try {
+          await fetch('/api/excl', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, tags })
+          });
+        } catch(e) {}
+      } else {
+        btn.classList.remove('active');
+        btn.textContent = '✕ Exclure';
+        const idx = sessionExcl.indexOf(url);
+        if (idx > -1) sessionExcl.splice(idx, 1);
+        updateSessionPanel();
+        toast(`Retiré des exclusions`, 'excl');
+        try {
+          await fetch('/api/excl', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, tags })
+          });
+        } catch(e) {}
+      }
+    });
+  });
+</script>
+</body>
+</html>
